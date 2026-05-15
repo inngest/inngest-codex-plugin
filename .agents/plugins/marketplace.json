@@ -1,0 +1,20 @@
+{
+  "name": "inngest-codex-plugin",
+  "interface": {
+    "displayName": "Inngest"
+  },
+  "plugins": [
+    {
+      "name": "inngest",
+      "source": {
+        "source": "local",
+        "path": "./plugins/inngest"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

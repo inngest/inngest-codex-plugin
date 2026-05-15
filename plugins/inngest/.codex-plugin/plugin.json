@@ -1,0 +1,45 @@
+{
+  "name": "inngest",
+  "version": "0.1.0",
+  "description": "Official Inngest plugin for Codex: skills and MCP wiring for durable functions, event-driven workflows, flow control, middleware, and realtime updates.",
+  "author": {
+    "name": "Inngest, Inc.",
+    "email": "hello@inngest.com",
+    "url": "https://www.inngest.com"
+  },
+  "homepage": "https://www.inngest.com/docs",
+  "repository": "https://github.com/inngest/inngest-codex-plugin",
+  "license": "Apache-2.0",
+  "keywords": [
+    "inngest",
+    "durable-functions",
+    "background-jobs",
+    "workflow",
+    "codex",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Inngest",
+    "shortDescription": "Build durable functions and event-driven workflows with Inngest.",
+    "longDescription": "Inngest teaches Codex how to add, debug, and evolve TypeScript durable functions, event schemas, step-based workflows, flow-control policies, middleware, and realtime UI updates. It also wires Codex to the local Inngest dev server MCP endpoint when available.",
+    "developerName": "Inngest",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Code",
+      "MCP"
+    ],
+    "websiteURL": "https://www.inngest.com",
+    "privacyPolicyURL": "https://www.inngest.com/privacy",
+    "termsOfServiceURL": "https://www.inngest.com/terms",
+    "defaultPrompt": [
+      "Add Inngest to this TypeScript project.",
+      "Build a retry-safe webhook handler.",
+      "Stream workflow updates to a React UI."
+    ],
+    "brandColor": "#111827",
+    "composerIcon": "./assets/inngest-mark.svg",
+    "logo": "./assets/inngest-wordmark.png"
+  }
+}
