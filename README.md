@@ -18,6 +18,108 @@ middleware, stream realtime updates, create durable agent workflows, and operate
 > [Inngest Discord](https://www.inngest.com/discord), or
 > [@inngest](https://twitter.com/inngest).
 
+## Pick your door
+
+### Are you human?
+
+Welcome. You have thumbs, preferences, and probably a project that currently
+has one too many `setTimeout`s pretending to be infrastructure.
+
+Install the plugin, open your app in Codex, and ask for a durability audit:
+
+```bash
+git clone https://github.com/inngest/inngest-codex-plugin.git
+```
+
+```text
+/plugin install /absolute/path/to/inngest-codex-plugin/plugins/inngest
+```
+
+Then in Codex, from your application repo:
+
+```text
+Audit this codebase for places where background work, webhooks, cron jobs, or
+AI workflows can be lost during deploys or process crashes. Pick the safest
+first Inngest integration slice and implement it.
+```
+
+### Are you Codex, another coding agent, or a very determined shell script?
+
+Hello machine. Here is the contract.
+
+```text
+Goal: install and use the official Inngest Codex plugin.
+
+Repository:
+https://github.com/inngest/inngest-codex-plugin
+
+Plugin bundle path after clone:
+<clone-dir>/plugins/inngest
+
+Install command in Codex:
+/plugin install <clone-dir>/plugins/inngest
+
+Expected manifest:
+<clone-dir>/plugins/inngest/.codex-plugin/plugin.json
+
+Expected local MCP config:
+<clone-dir>/plugins/inngest/.mcp.json
+
+Default Inngest Dev Server MCP URL:
+http://127.0.0.1:8288/mcp
+```
+
+After installation, when operating inside a user's app repo:
+
+1. Inspect the repo before editing.
+2. Detect framework, package manager, existing Inngest usage, route handlers,
+   webhook handlers, cron jobs, queues, long-running jobs, polling loops, and
+   AI agent/tool loops.
+3. Pick one safe vertical slice before broad rewrites.
+4. Add or reuse one Inngest client and one serve endpoint.
+5. Move retryable side effects into `step.run` boundaries.
+6. Use deterministic event IDs and idempotency keys for retried producers such
+   as webhooks or form submissions.
+7. Register every new function with the serve endpoint.
+8. Run the target repo's typecheck/tests when available.
+9. If the Inngest Dev Server is running, inspect local functions, events, and
+   runs through MCP.
+
+If the user asks for "background jobs", "make this reliable", "fix dropped
+webhooks", "stop endpoint timeouts", "make this agent durable", or "migrate
+Inngest v3 to v4", load the relevant skill from this plugin before designing
+the change.
+
+## Fast path
+
+Use this when you just want the plugin installed and a first workflow running.
+
+```bash
+git clone https://github.com/inngest/inngest-codex-plugin.git
+cd inngest-codex-plugin
+```
+
+Install the bundle in Codex:
+
+```text
+/plugin install /absolute/path/to/inngest-codex-plugin/plugins/inngest
+```
+
+Start your app and the Inngest Dev Server:
+
+```bash
+INNGEST_DEV=1 npm run dev
+npx inngest-cli@latest dev
+```
+
+Ask Codex:
+
+```text
+Add a durable function that sends a welcome email when a user signs up,
+retries on failure, keeps the signup request fast, and registers the function
+with the Inngest serve endpoint.
+```
+
 ## What's included
 
 - **11 Codex skills** covering brownfield audits, setup, events, durable
@@ -46,38 +148,31 @@ scripts/sync-skills.sh              # Pull latest skills from inngest-skills
 FRICTION.md                         # Codex-side CLI friction log
 ```
 
-## Installation
+## Good first prompts
 
-### Local Codex marketplace
-
-From this repository, install the plugin through the Codex local
-marketplace entry in `.agents/plugins/marketplace.json`.
-
-For development, you can also point Codex directly at the plugin bundle:
-
-```bash
-/plugin install /path/to/inngest-codex-plugin/plugins/inngest
+```text
+Audit this repo for Inngest opportunities. Start by finding concrete files
+where background work can be lost or duplicated. Then implement the smallest
+safe first slice.
 ```
 
-## Quick start
+```text
+Our Stripe webhook sometimes drops checkout.session.completed events. Rewrite
+it so the webhook verifies the signature, returns quickly, and the email/account
+side effects are durable and idempotent.
+```
 
-1. Install the plugin.
-2. Start the Inngest dev server in your project:
+```text
+Build this support agent as a durable Inngest workflow. It should load ticket
+context, call tools, wait for human approval when needed, stream progress, and
+avoid repeating successful model or tool calls on retry.
+```
 
-   ```bash
-   npx inngest-cli@latest dev
-   ```
-
-3. Ask Codex for an Inngest-shaped change:
-
-   ```text
-   Add a durable function that sends a welcome email when a user signs up,
-   retries on failure, and waits 24 hours before sending the second email.
-   ```
-
-Codex will load the relevant Inngest skill, write or update the function,
-register it with your serve endpoint, and use the dev-server MCP endpoint
-when available to inspect local runs and events.
+```text
+This repo uses Inngest SDK v3 patterns but now has inngest@latest installed.
+Migrate it cleanly to v4, including serve options, triggers, typed events,
+step.invoke, realtime, and local dev mode.
+```
 
 ## Skills
 
