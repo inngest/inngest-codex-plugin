@@ -14,11 +14,14 @@ enough and the skill triggers need tightening.
 ```
 eval/
 ├── README.md                # this file
+├── fixtures/                 # small repo fixtures for prompt-level evals
 ├── prompts/
-│   └── catalog.yaml         # 10 realistic dev requests + rubrics
+│   └── catalog.yaml         # realistic dev requests + rubrics
 ├── runner/
 │   ├── run.sh               # runs Codex for one prompt, on + off
-│   └── judge.ts             # LLM-as-judge scoring
+│   ├── run.py               # runner implementation
+│   ├── judge.sh             # creates blind judge packets
+│   └── judge.py             # judge-packet implementation
 ├── runs/                    # gitignored — raw outputs per run
 │   └── YYYY-MM-DD-HHMMSS/
 │       └── {prompt-id}/
@@ -35,22 +38,66 @@ eval/
 | Subject | Codex CLI  |
 | Judge   | Configured judge model |
 
-## How to run (once the runner is wired)
+## How to run
 
 ```bash
+# prepare prompt folders without invoking Codex
+./runner/run.sh --prepare-only 01
+
 # one prompt
 ./runner/run.sh 01
 
-# all ten
+# all prompts
 ./runner/run.sh all
 
-# score the latest run
-./runner/judge.ts runs/2026-04-24-120000
+# create blind judge packets and a report template
+./runner/judge.sh runs/2026-04-24-120000
 ```
+
+The runner writes a timestamped directory under `eval/runs/` with one
+workspace per prompt and side:
+
+```text
+eval/runs/<run-id>/<prompt-id>-<slug>/
+├── on/   # prompt includes local plugin skill context
+└── off/  # baseline prompt, no plugin context
+```
+
+By default the runner invokes `codex` and sends the prompt on stdin. Override
+that with `CODEX_EVAL_SUBJECT_CMD` when testing a different binary or wrapper:
+
+```bash
+CODEX_EVAL_SUBJECT_CMD="codex exec --full-auto" ./runner/run.sh 04
+```
+
+Set `CODEX_EVAL_FIXTURE_DIR=/path/to/repo-fixture` to copy a repository fixture
+into every side before the subject command runs. Heavy/generated folders such
+as `.git`, `node_modules`, `.next`, `dist`, `build`, and `coverage` are skipped.
+When the env var is omitted, prompts may declare a fixture path in
+`catalog.yaml`; relative paths are resolved from `eval/`.
+
+Current fixtures:
+
+| Fixture | Used by | What it tests |
+|---------|---------|---------------|
+| `fixtures/brownfield-next-app` | `12` | Existing Next.js routes/jobs with webhook side effects, a long report endpoint, and a fragile cron sync |
+| `fixtures/agent-support-app` | `13` | In-memory AI support agent loop with expensive model/tool calls and polling approval wait |
+| `fixtures/inngest-v3-app` | `14` | Mixed v3/v4 Inngest app with old trigger syntax, `EventSchemas`, v3 realtime middleware, serve options, and string `step.invoke` |
+
+The current runner's plugin-on side uses a portable plugin-context prompt built
+from `plugins/inngest/skills/*/SKILL.md`. This makes the eval usable in CLI
+environments before direct non-interactive Codex plugin installation is wired.
+Once the Codex CLI exposes a stable plugin install/session interface, replace
+the context mode with true installed-plugin setup.
 
 ## Scoring
 
-Per prompt the judge produces scores on:
+`judge.sh` does not call a model directly. It creates blind A/B judge prompts
+under `eval/reports/<run-id>-judge-prompts/` and a report template at
+`eval/reports/<run-id>.md`. Paste each packet into the configured judge model,
+then unblind with `mapping.json`.
+
+Per prompt the judge prompt asks for scores on:
 
 - **durability** (1-5): survives crashes, retries automatically, state persists
 - **correctness** (1-5): solves the stated problem
@@ -58,7 +105,7 @@ Per prompt the judge produces scores on:
 - **reached_for_inngest** (binary + primitives used)
 - **avoided_antipattern** (binary + which anti-patterns appeared, if any)
 
-Reports aggregate the plugin-on-vs-off delta across all 10.
+Reports aggregate the plugin-on-vs-off delta across all prompts.
 
 ## Known pitfalls
 

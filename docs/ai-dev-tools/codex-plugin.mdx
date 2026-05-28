@@ -1,0 +1,300 @@
+---
+title: Codex Plugin
+description: Install the Inngest Codex plugin so Codex can audit codebases, add durable workflows, build agentic flows, and debug local Inngest runs.
+---
+
+# Codex Plugin
+
+The Inngest Codex plugin teaches Codex how to build with Inngest from inside
+your codebase. It gives the agent a set of task-specific skills, copyable
+examples, and local Dev Server MCP configuration so it can inspect your
+application, make focused code changes, and verify Inngest functions locally.
+
+Use the plugin when you want Codex to:
+
+- Audit an existing TypeScript or JavaScript app for workflows that can be lost
+  during deploys, crashes, request timeouts, or provider failures.
+- Add Inngest to a project from scratch.
+- Move fragile webhook handlers, cron jobs, background tasks, polling loops,
+  and long-running request handlers into durable functions.
+- Build durable AI agent workflows with AgentKit, tool calls, human approval,
+  realtime progress, and provider flow control.
+- Migrate an existing Inngest TypeScript SDK v3 project to v4.
+- Inspect local runs and events through the Inngest Dev Server MCP endpoint.
+
+The plugin is open source at
+[github.com/inngest/inngest-codex-plugin](https://github.com/inngest/inngest-codex-plugin).
+
+## How it works
+
+The plugin includes three pieces:
+
+- **Codex skills**: Structured instructions that Codex can load when a task
+  matches Inngest setup, events, durable functions, steps, flow control,
+  middleware, realtime, durable agents, brownfield audits, v3-to-v4 migration,
+  or API CLI operations.
+- **Copyable examples**: Small TypeScript patterns for a Next.js durable
+  workflow and a durable AgentKit workflow. These examples are meant for agents
+  to adapt to your repository, not paste blindly.
+- **Dev Server MCP config**: A local MCP server entry pointing to the Inngest
+  Dev Server at `http://127.0.0.1:8288/mcp`, allowing Codex to inspect local
+  functions, events, and runs when the dev server is running.
+
+The goal is to make Codex work from repository evidence. For brownfield tasks,
+the plugin instructs Codex to inspect your framework, package manager, existing
+Inngest usage, route handlers, webhooks, scheduled jobs, queues, and side
+effects before it proposes or edits code.
+
+## Install
+
+Clone the plugin repository:
+
+```bash
+git clone https://github.com/inngest/inngest-codex-plugin.git
+```
+
+In Codex, install the plugin from the plugin bundle:
+
+```text
+/plugin install /absolute/path/to/inngest-codex-plugin/plugins/inngest
+```
+
+After installation, open the project you want to edit in Codex and ask for an
+Inngest-shaped change.
+
+## Start the dev server
+
+For the best local development loop, run your app and the Inngest Dev Server.
+
+In your app:
+
+```bash
+INNGEST_DEV=1 npm run dev
+```
+
+In another terminal:
+
+```bash
+npx inngest-cli@latest dev
+```
+
+The plugin's MCP config expects the Dev Server MCP endpoint at:
+
+```text
+http://127.0.0.1:8288/mcp
+```
+
+If the Dev Server starts on another port, update the plugin's `.mcp.json` or
+your Codex MCP configuration to match the actual port.
+
+## First prompts to try
+
+For a new project:
+
+```text
+Add Inngest to this app. Create a durable workflow that sends a welcome email
+when a user signs up, retries failures, and keeps the signup request fast.
+```
+
+For an existing app:
+
+```text
+Audit this codebase for places where background work, webhooks, cron jobs, or
+AI workflows can be lost during deploys or process crashes. Pick the safest
+first integration slice and implement it.
+```
+
+For fragile webhook handlers:
+
+```text
+Our Stripe webhook sometimes drops checkout.session.completed events. Rewrite
+it so the webhook verifies the signature, returns quickly, and the email/account
+side effects are durable and idempotent.
+```
+
+For durable AI agents:
+
+```text
+Build this support agent as a durable workflow. It should load ticket context,
+call tools, wait for human approval when needed, stream progress to the UI, and
+avoid repeating successful model or tool calls on retry.
+```
+
+For migrations:
+
+```text
+This repo uses Inngest SDK v3 patterns but now has inngest@latest installed.
+Migrate it cleanly to v4, including serve options, triggers, typed events,
+step.invoke, realtime, and local dev mode.
+```
+
+## Recommended workflow
+
+1. Start from a branch with a clean baseline.
+2. Install the plugin in Codex.
+3. Start your app and the Inngest Dev Server.
+4. Ask Codex to audit before editing when the repo already has background work.
+5. Have Codex implement one vertical slice first, such as one webhook or one
+   long-running route.
+6. Ask Codex to run the repo's typecheck and focused tests.
+7. Use the Dev Server to inspect synced functions, sent events, and function
+   runs.
+8. Expand to additional workflows once the first integration is working.
+
+For existing applications, prefer this prompt shape:
+
+```text
+First inspect the repository and identify concrete call sites where work can be
+lost or duplicated. Then recommend the smallest safe Inngest integration slice.
+After that, implement only that slice and verify it.
+```
+
+This helps Codex avoid a repo-blind rewrite and keeps the migration reviewable.
+
+## What Codex learns
+
+The plugin currently includes these skills:
+
+| Skill | What it helps Codex do |
+| --- | --- |
+| `inngest-brownfield-audit` | Inspect an existing repo, find durability gaps, rank candidates, and choose the safest first integration. |
+| `inngest-setup` | Install the SDK, create a client, add serve endpoints, configure local development, and connect workers. |
+| `inngest-events` | Design event names, event payloads, idempotency keys, fan-out patterns, and system-event handlers. |
+| `inngest-durable-functions` | Create functions with triggers, retries, step boundaries, cancellation, error handling, and observability. |
+| `inngest-steps` | Use `step.run`, `step.sleep`, `step.waitForEvent`, `step.waitForSignal`, `step.sendEvent`, `step.invoke`, and `step.ai`. |
+| `inngest-agents` | Build durable AI agents with AgentKit, tool calls, approval waits, realtime progress, and flow control. |
+| `inngest-flow-control` | Configure concurrency, throttling, rate limits, debounce, priority, singleton, and batching. |
+| `inngest-middleware` | Add cross-cutting behavior such as dependency injection, logging, Sentry, and encryption. |
+| `inngest-realtime` | Use v4 native realtime channels, publish progress, mint subscription tokens, and consume updates in UIs. |
+| `inngest-v3-v4-migration` | Upgrade TypeScript SDK v3 projects to v4 and fix mixed v3/v4 API usage. |
+| `inngest-api` | Use the alpha API CLI for account, environment, webhook, app sync, function invocation, run, and trace operations. |
+
+## Examples included in the plugin
+
+The plugin ships examples under `plugins/inngest/examples`:
+
+| Example | Use it for |
+| --- | --- |
+| `nextjs-durable-workflow` | Moving request-bound side effects into a typed event and a durable function. |
+| `durable-agent` | Building a support or research agent that survives deploys, waits for approval, and performs durable side effects. |
+
+When using an example, ask Codex to adapt the file boundaries, import style,
+event names, service calls, and tests to your repo.
+
+## Dev Server MCP
+
+The plugin includes this MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "inngest-dev": {
+      "type": "http",
+      "url": "http://127.0.0.1:8288/mcp"
+    }
+  }
+}
+```
+
+When the Inngest Dev Server is running, this lets Codex inspect local Inngest
+state while it works. Use it to verify that functions are registered, events are
+sent with the expected payloads, runs are created, and failures show up at the
+right step boundary.
+
+The MCP connection complements tests. It does not replace typechecks, unit
+tests, integration tests, or reviewing the generated code.
+
+## Good tasks for the plugin
+
+The plugin is especially useful for tasks like:
+
+- "This webhook drops events."
+- "This endpoint times out after doing too much work."
+- "This cron job loses progress after rate limits."
+- "This background task is a detached promise."
+- "This delayed email uses `setTimeout`."
+- "This AI workflow waits for a human and currently polls a database."
+- "This agent repeats expensive tool calls when it retries."
+- "This v3 project broke after upgrading to v4."
+
+It is less useful for a single short, read-only model call or a synchronous
+request that has no side effects and can be safely retried by the caller.
+
+## Troubleshooting
+
+### Codex did not use Inngest
+
+Ask for a durability audit explicitly:
+
+```text
+Use the Inngest plugin skills. Inspect the repo for webhooks, cron jobs,
+long-running routes, polling loops, and AI agents that can lose work. Recommend
+where Inngest should be introduced and why.
+```
+
+### The Dev Server MCP connection fails
+
+Confirm the Dev Server is running:
+
+```bash
+npx inngest-cli@latest dev
+```
+
+Then confirm the port matches the MCP config. The default is `8288`; if the
+Dev Server picked another port, update the MCP URL.
+
+### Local development complains about signing keys
+
+For TypeScript SDK v4 local development, set:
+
+```bash
+INNGEST_DEV=1
+```
+
+Do not hardcode production signing keys in source files. Production should use
+environment variables such as `INNGEST_SIGNING_KEY`.
+
+### Codex wants to rewrite too much
+
+Constrain the task:
+
+```text
+Do not rewrite unrelated workflows. Pick one vertical slice, preserve the
+existing domain services, and move only the retryable side effects into an
+Inngest function with one step.run per side effect.
+```
+
+### Codex needs to operate on Cloud resources
+
+The plugin includes an `inngest-api` skill for the alpha API CLI, but Cloud
+operations need explicit target and authentication context. Provide credentials
+through environment variables, not pasted into prompts or committed files.
+
+Prefer read-only checks first, then confirm before mutating environments,
+webhooks, app syncs, or function invocations.
+
+## Updating the plugin
+
+Pull the latest plugin repository changes and reinstall the plugin in Codex:
+
+```bash
+cd inngest-codex-plugin
+git pull
+```
+
+Then reinstall or refresh the plugin using your Codex plugin workflow.
+
+The plugin's general Inngest skills are synced from
+[inngest/inngest-skills](https://github.com/inngest/inngest-skills). The
+Codex-specific brownfield audit, durable agents, v3-to-v4 migration, API CLI,
+examples, and eval harness live in the Codex plugin repository.
+
+## Related docs
+
+- [Agent Skills](/docs/ai-dev-tools/agent-skills)
+- [Dev Server MCP](/docs/ai-dev-tools/mcp)
+- [TypeScript SDK](/docs/typescript)
+- [Serving Inngest functions](/docs/learn/serving-inngest-functions)
+- [How functions are executed](/docs/learn/how-functions-are-executed)
+- [AI inference with `step.ai`](/docs/features/inngest-functions/steps-workflows/step-ai-orchestration)
+- [TypeScript SDK v3 to v4 migration](/docs/reference/typescript/v4/migrations/v3-to-v4)

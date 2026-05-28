@@ -263,7 +263,7 @@ prompts:
         - raise the load balancer timeout
         - detached Promise after responding
         - in-process worker thread
-        - "just throw it in a background job" without durability
+        - '"just throw it in a background job" without durability'
     rubric:
       durability: |
         PDF generation survives API server restarts. If the API process
@@ -438,3 +438,137 @@ prompts:
         between steps as the only publish path (would silently lose
         durability on retry). No `@inngest/realtime` package install. No
         hand-rolled WebSocket layer alongside the function.
+
+  - id: "12"
+    slug: brownfield-durability-audit
+    fixture: fixtures/brownfield-next-app
+    prompt: |
+      This is an existing TypeScript web app. Please audit it for places
+      where background work, webhooks, cron jobs, or AI workflows can be
+      lost during deploys or process crashes. Then pick the safest first
+      integration slice and implement it.
+    targets:
+      primitives:
+        - repository audit before editing
+        - framework and package detection
+        - event-driven integration plan
+        - step.run boundaries
+        - idempotency
+      naive_traps:
+        - adding a generic Inngest example without inspecting the repo
+        - broad rewrite across unrelated workflows
+        - moving side effects without an idempotency key
+        - adding a client but not registering a serve endpoint
+    rubric:
+      durability: |
+        Candidate identifies concrete code paths where work can be lost or
+        duplicated and chooses a first slice that improves crash/deploy
+        resilience without weakening existing behavior.
+      correctness: |
+        Candidate inspects the actual repository shape before editing,
+        detects framework/package conventions, adds Inngest in the right
+        files, and preserves the original trigger semantics.
+      idempotency: |
+        Candidate names and uses a deterministic idempotency key for the
+        migrated workflow. Retries do not duplicate user-visible side
+        effects.
+      reached_for_inngest: |
+        Candidate uses the brownfield audit workflow, emits an event from
+        the existing trigger, handles side effects inside an Inngest
+        function with `step.run`, and registers the function with the serve
+        endpoint.
+      avoided_antipattern: |
+        No repo-blind boilerplate. No sweeping queue/cron rewrite. No
+        fire-and-forget promise after the HTTP response. No unregistered
+        function or orphaned Inngest client.
+
+  - id: "13"
+    slug: durable-agent-tool-loop
+    fixture: fixtures/agent-support-app
+    prompt: |
+      We're building an AI support agent that reads a ticket, looks up
+      customer/account data, calls a few tools, may wait for a human
+      approval, and then drafts or sends a reply. It can take minutes and
+      we need progress updates in the UI. How should we build it so it
+      survives deploys and doesn't repeat expensive model/tool calls?
+    targets:
+      primitives:
+        - durable agent workflow
+        - step.ai or step.run per model/tool boundary
+        - step.waitForEvent or step.waitForSignal
+        - realtime progress
+        - flow control for model providers
+      naive_traps:
+        - in-memory agent loop
+        - one giant try/catch around all model and tool calls
+        - setTimeout or cron polling for human approval
+        - process-local WebSocket as the only progress channel
+    rubric:
+      durability: |
+        Agent progress survives deploys and crashes. Successful model and
+        tool calls are memoized so a later failure does not replay the
+        whole agent loop.
+      correctness: |
+        Workflow handles lookup, tool calls, optional human approval, and
+        final draft/send in order. Progress updates map to durable
+        execution boundaries.
+      idempotency: |
+        Replays do not duplicate external side effects or repeat expensive
+        successful provider calls unnecessarily. Approval and send steps
+        are guarded by deterministic identifiers.
+      reached_for_inngest: |
+        Candidate models the agent as an Inngest function, uses `step.ai`
+        or `step.run` for model/tool work, waits durably for approval with
+        `step.waitForEvent` or `step.waitForSignal`, and uses native
+        realtime for UI progress.
+      avoided_antipattern: |
+        No in-memory-only loop. No `setTimeout` or cron poller for human
+        review. No hand-rolled process-local WebSocket progress channel
+        disconnected from durable execution. No custom retry loop around
+        the entire agent.
+
+  - id: "14"
+    slug: v3-to-v4-migration
+    fixture: fixtures/inngest-v3-app
+    prompt: |
+      This repo already uses Inngest, but it was written against the v3
+      TypeScript SDK. We upgraded the package and now local dev complains
+      about signing keys, some functions don't register, realtime is broken,
+      and a step.invoke call fails. Please migrate it cleanly to v4.
+    targets:
+      primitives:
+        - v3/v4 usage scan
+        - createFunction triggers in options
+        - eventType or staticSchema
+        - serve options moved to client
+        - step.invoke referenceFunction or imported function
+        - v4 native realtime
+        - INNGEST_DEV local mode
+      naive_traps:
+        - only bumping package.json
+        - hardcoding isDev true in production code
+        - leaving @inngest/realtime middleware installed
+        - leaving string function IDs in step.invoke
+        - replacing typed events with untyped strings everywhere
+    rubric:
+      durability: |
+        Migration preserves existing function behavior and durable step
+        boundaries. The app can run locally without accidentally forcing
+        production/cloud mode.
+      correctness: |
+        Candidate scans current Inngest usage, applies all relevant v4
+        breaking changes, keeps functions registered, and verifies typecheck
+        or equivalent static checks.
+      idempotency: |
+        Existing event IDs, function IDs, and side-effect idempotency are
+        preserved. Migration does not introduce duplicate event sends or
+        duplicate side effects.
+      reached_for_inngest: |
+        Candidate uses Inngest v4 patterns: triggers in createFunction
+        options, eventType/staticSchema where schemas exist, serve options
+        on the client, referenceFunction/imported functions for step.invoke,
+        native realtime APIs, and INNGEST_DEV for local development.
+      avoided_antipattern: |
+        No v3 realtime middleware in a v4 project. No raw string function IDs
+        in step.invoke. No hardcoded local dev mode in production source. No
+        schema type erasure unless the original app had no types to preserve.

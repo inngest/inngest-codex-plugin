@@ -1,7 +1,7 @@
 {
   "name": "inngest",
-  "version": "0.1.0",
-  "description": "Official Inngest plugin for Codex: skills and MCP wiring for durable functions, event-driven workflows, flow control, middleware, and realtime updates.",
+  "version": "0.3.0",
+  "description": "Official Inngest plugin for Codex: skills and MCP wiring for brownfield audits, durable functions, durable agents, event-driven workflows, flow control, middleware, realtime updates, v3-to-v4 migrations, and API CLI operations.",
   "author": {
     "name": "Inngest, Inc.",
     "email": "hello@inngest.com",
@@ -22,8 +22,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Inngest",
-    "shortDescription": "Build durable functions and event-driven workflows with Inngest.",
-    "longDescription": "Inngest teaches Codex how to add, debug, and evolve TypeScript durable functions, event schemas, step-based workflows, flow-control policies, middleware, and realtime UI updates. It also wires Codex to the local Inngest dev server MCP endpoint when available.",
+    "shortDescription": "Audit codebases and build durable workflows and agents with Inngest.",
+    "longDescription": "Inngest teaches Codex how to audit an existing TypeScript/JavaScript codebase for durability gaps, add, debug, migrate, and evolve durable functions, event schemas, step-based workflows, durable agent flows, flow-control policies, middleware, realtime UI updates, and alpha API CLI operations for Cloud and local environments. It also wires Codex to the local Inngest dev server MCP endpoint when available.",
     "developerName": "Inngest",
     "category": "Developer Tools",
     "capabilities": [
@@ -34,9 +34,9 @@
     "privacyPolicyURL": "https://www.inngest.com/privacy",
     "termsOfServiceURL": "https://www.inngest.com/terms",
     "defaultPrompt": [
-      "Add Inngest to this TypeScript project.",
-      "Build a retry-safe webhook handler.",
-      "Stream workflow updates to a React UI."
+      "Audit this codebase for Inngest opportunities.",
+      "Add a durable Inngest workflow.",
+      "Create a durable AI agent workflow."
     ],
     "brandColor": "#111827",
     "composerIcon": "./assets/inngest-mark.svg",

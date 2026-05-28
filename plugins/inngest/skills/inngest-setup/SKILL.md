@@ -11,9 +11,17 @@ This skill sets up Inngest in a TypeScript project from scratch, covering instal
 
 ## Prerequisites
 
-- Node.js 18+ (Node.js 22.4+ r ecommended for WebSocket support)
+- Node.js 18+ (Node.js 22.4+ recommended for WebSocket support)
 - TypeScript project
 - Package manager (npm, yarn, pnpm, or bun)
+
+## Copyable Example
+
+When starting a Next.js project from scratch, inspect the companion example at
+`../../examples/nextjs-durable-workflow`. It shows the full agent-friendly
+shape: shared Inngest client, typed event, `/api/inngest` serve route, quick
+HTTP entrypoint that emits a deterministic event, and a durable function that
+owns the side effects.
 
 ## Step 1: Install the Inngest SDK
 

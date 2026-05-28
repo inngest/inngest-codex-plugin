@@ -47,6 +47,14 @@ web_modules/
 # TypeScript cache
 *.tsbuildinfo
 
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Eval run artifacts
+eval/runs/*
+!eval/runs/.gitkeep
+
 # Optional npm cache directory
 .npm
 
