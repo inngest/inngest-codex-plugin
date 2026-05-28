@@ -9,7 +9,7 @@
   },
   "homepage": "https://www.inngest.com/docs",
   "repository": "https://github.com/inngest/inngest-codex-plugin",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "keywords": [
     "inngest",
     "durable-functions",
