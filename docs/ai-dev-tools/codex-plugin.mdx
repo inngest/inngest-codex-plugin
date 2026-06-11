@@ -35,7 +35,7 @@ The plugin includes three pieces:
 - **Codex skills**: Structured instructions that Codex can load when a task
   matches Inngest setup, events, durable functions, steps, flow control,
   middleware, realtime, durable agents, brownfield audits, v3-to-v4 migration,
-  or API CLI operations.
+  CLI/dev-server workflows, API CLI operations, or REST API v2 fallback.
 - **Copyable examples**: Small TypeScript patterns for a Next.js durable
   workflow and a durable AgentKit workflow. These examples are meant for agents
   to adapt to your repository, not paste blindly.
@@ -170,7 +170,9 @@ The plugin currently includes these skills:
 | `inngest-middleware` | Add cross-cutting behavior such as dependency injection, logging, Sentry, and encryption. |
 | `inngest-realtime` | Use v4 native realtime channels, publish progress, mint subscription tokens, and consume updates in UIs. |
 | `inngest-v3-v4-migration` | Upgrade TypeScript SDK v3 projects to v4 and fix mixed v3/v4 API usage. |
-| `inngest-api` | Use the alpha API CLI for account, environment, webhook, app sync, function invocation, run, and trace operations. |
+| `inngest-cli` | Use general CLI and Dev Server workflows: `inngest dev`, local testing, Docker, MCP setup, deployment checks, and self-hosted `inngest start`. |
+| `inngest-api-cli` | Use prescriptive terminal workflows for `inngest api`, Cloud debugging, run traces, event runs, app syncs, invocation, webhooks, envs, keys, and Insights. |
+| `inngest-api` | Use REST API v2 and OpenAPI fallback when raw HTTP is needed or the CLI does not expose an endpoint. |
 
 ## Examples included in the plugin
 
@@ -269,12 +271,18 @@ Inngest function with one step.run per side effect.
 
 ### Codex needs to operate on Cloud resources
 
-The plugin includes an `inngest-api` skill for the alpha API CLI, but Cloud
-operations need explicit target and authentication context. Provide credentials
-through environment variables, not pasted into prompts or committed files.
+The plugin includes `inngest-cli` for general CLI/dev-server workflows,
+`inngest-api-cli` for beta `inngest api` operations, and `inngest-api` for REST
+API v2 fallback. Cloud operations need explicit target and authentication
+context. Provide credentials through environment variables, not pasted into
+prompts or committed files.
 
-Prefer read-only checks first, then confirm before mutating environments,
-webhooks, app syncs, or function invocations.
+Codex should load `inngest-api-cli`, start with
+`npx inngest-cli@latest api --help`, command-specific help, and the
+agent-friendly API docs at `https://api-docs.inngest.com/llms.txt` before
+asking for details the API can reveal. Prefer read-only checks first, then
+confirm target account, environment, and intent before mutating environments,
+webhooks, app syncs, function invocations, or broad Insights queries.
 
 ## Updating the plugin
 
@@ -287,10 +295,11 @@ git pull
 
 Then reinstall or refresh the plugin using your Codex plugin workflow.
 
-The plugin's general Inngest skills are synced from
+The plugin's general Inngest skills, including CLI/dev-server workflows, API
+CLI operations, and REST API v2 fallback, are synced from
 [inngest/inngest-skills](https://github.com/inngest/inngest-skills). The
-Codex-specific brownfield audit, durable agents, v3-to-v4 migration, API CLI,
-examples, and eval harness live in the Codex plugin repository.
+Codex-specific brownfield audit, durable agents, v3-to-v4 migration, examples,
+and eval harness live in the Codex plugin repository.
 
 ## Related docs
 

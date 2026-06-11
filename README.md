@@ -10,10 +10,12 @@
 The official Inngest plugin for Codex. One install, and Codex knows how
 to audit an existing codebase for durability gaps, build reliable durable
 functions, design event-driven workflows, configure flow control, add
-middleware, stream realtime updates, create durable agent workflows, and operate
-[Inngest](https://www.inngest.com) through the alpha API CLI.
+middleware, stream realtime updates, create durable agent workflows, operate
+[Inngest](https://www.inngest.com) through the CLI and Dev Server, inspect
+Cloud/local runs with `inngest api`, fall back to REST API v2 when needed, and
+migrate Inngest SDK projects.
 
-> **Beta:** v0.3.0 is the current Codex port of the Inngest Claude Code
+> **Beta:** v0.3.3 is the current Codex port of the Inngest Claude Code
 > plugin. Feedback is welcome via GitHub issues, the
 > [Inngest Discord](https://www.inngest.com/discord), or
 > [@inngest](https://twitter.com/inngest).
@@ -84,6 +86,12 @@ After installation, when operating inside a user's app repo:
 8. Run the target repo's typecheck/tests when available.
 9. If the Inngest Dev Server is running, inspect local functions, events, and
    runs through MCP.
+10. For CLI/dev-server workflows, load `inngest-cli`. For Cloud or API-level
+    debugging, load `inngest-api-cli`, use `npx inngest-cli@latest api --help`,
+    command-specific help, and `https://api-docs.inngest.com/llms.txt` before
+    asking the user for anything the API can reveal.
+11. Use `INNGEST_API_KEY` and `INNGEST_ENV` from the environment. Never paste or
+    write API keys, event keys, signing keys, webhook URLs, or decrypted secrets.
 
 If the user asks for "background jobs", "make this reliable", "fix dropped
 webhooks", "stop endpoint timeouts", "make this agent durable", or "migrate
@@ -122,15 +130,15 @@ with the Inngest serve endpoint.
 
 ## What's included
 
-- **11 Codex skills** covering brownfield audits, setup, events, durable
+- **13 Codex skills** covering brownfield audits, setup, events, durable
   functions, steps, durable agents, flow control, middleware, realtime,
-  v3-to-v4 migrations, and API CLI operations.
+  v3-to-v4 migrations, CLI/dev-server workflows, API CLI operations, and REST
+  API v2 fallback.
 - **Codex plugin manifest** at `plugins/inngest/.codex-plugin/plugin.json`.
 - **Local marketplace entry** at `.agents/plugins/marketplace.json`.
 - **MCP server config** for the local Inngest dev server at
   `http://127.0.0.1:8288/mcp`.
 - **Eval harness** adapted from the Claude Code plugin repo.
-- **CLI friction log** at `FRICTION.md` for cross-agent AX testing.
 
 ## Repository layout
 
@@ -145,7 +153,6 @@ plugins/inngest/.mcp.json           # Local dev-server MCP config
 docs/                               # Website-ready documentation drafts
 eval/                               # Prompt catalog and judge harness
 scripts/sync-skills.sh              # Pull latest skills from inngest-skills
-FRICTION.md                         # Codex-side CLI friction log
 ```
 
 ## Good first prompts
@@ -188,7 +195,9 @@ step.invoke, realtime, and local dev mode.
 | [`inngest-middleware`](./plugins/inngest/skills/inngest-middleware/) | Lifecycle hooks, dependency injection, Sentry, encryption, custom middleware |
 | [`inngest-realtime`](./plugins/inngest/skills/inngest-realtime/) | v4 native realtime, channels, subscription tokens, React and SSE consumers |
 | [`inngest-v3-v4-migration`](./plugins/inngest/skills/inngest-v3-v4-migration/) | Upgrade TypeScript SDK v3 projects to v4 and fix mixed v3/v4 API usage |
-| [`inngest-api`](./plugins/inngest/skills/inngest-api/) | Alpha API CLI workflows for account/env operations, webhooks, app syncs, function invocation, runs, and traces |
+| [`inngest-cli`](./plugins/inngest/skills/inngest-cli/) | General CLI and Dev Server workflows: `inngest dev`, local testing, Docker, MCP setup, deployment checks, and self-hosted `inngest start` |
+| [`inngest-api-cli`](./plugins/inngest/skills/inngest-api-cli/) | Prescriptive terminal workflows for `inngest api`, Cloud debugging, run traces, event runs, app syncs, invocation, webhooks, envs, keys, and Insights |
+| [`inngest-api`](./plugins/inngest/skills/inngest-api/) | REST API v2 and OpenAPI fallback when raw HTTP is needed or the CLI does not expose an endpoint |
 
 ## Dev server MCP
 
@@ -227,12 +236,13 @@ It is written to fit beside the existing Inngest AI dev tools docs.
 
 ## Skills source of truth
 
-Most skills are mirrored from
+Most skills, including `inngest-cli`, `inngest-api-cli`, and `inngest-api`,
+are mirrored from
 [`inngest/inngest-skills`](https://github.com/inngest/inngest-skills).
 Run `scripts/sync-skills.sh` whenever upstream skills change. The
-`inngest-api`, `inngest-brownfield-audit`, `inngest-agents`, and
-`inngest-v3-v4-migration` skills are maintained in this repository while the
-alpha CLI and Codex-specific agent workflow stabilize.
+`inngest-brownfield-audit`, `inngest-agents`, and `inngest-v3-v4-migration`
+skills are maintained in this repository while the Codex-specific agent
+workflow stabilizes.
 
 ## License
 

@@ -13,7 +13,6 @@ TMPDIR="$(mktemp -d)"
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PLUGIN_ROOT="$REPO_ROOT/plugins/inngest"
 LOCAL_SKILLS=(
-  "inngest-api"
   "inngest-agents"
   "inngest-brownfield-audit"
   "inngest-v3-v4-migration"
