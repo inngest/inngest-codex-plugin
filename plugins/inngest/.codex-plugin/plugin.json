@@ -1,7 +1,7 @@
 {
   "name": "inngest",
-  "version": "0.3.3+codex.20260611043312",
-  "description": "Official Inngest plugin for Codex: skills and MCP wiring for brownfield audits, durable functions, durable agents, event-driven workflows, flow control, middleware, realtime updates, v3-to-v4 migrations, CLI/dev-server workflows, API CLI operations, and REST API v2 fallback.",
+  "version": "0.3.4+codex.20260702000000",
+  "description": "Official Inngest plugin for Codex: skills and MCP wiring for brownfield audits, durable functions, durable agents, Agent Evals, event-driven workflows, flow control, middleware, realtime updates, v3-to-v4 migrations, CLI/dev-server workflows, API CLI operations, and REST API v2 fallback.",
   "author": {
     "name": "Inngest, Inc.",
     "email": "hello@inngest.com",
@@ -14,6 +14,7 @@
     "inngest",
     "durable-functions",
     "background-jobs",
+    "agent-evals",
     "workflow",
     "codex",
     "mcp"
@@ -22,8 +23,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Inngest",
-    "shortDescription": "Audit codebases and build durable workflows and agents with Inngest.",
-    "longDescription": "Inngest teaches Codex how to audit an existing TypeScript/JavaScript codebase for durability gaps, add, debug, migrate, and evolve durable functions, event schemas, step-based workflows, durable agent flows, flow-control policies, middleware, realtime UI updates, CLI/dev-server workflows, API CLI operations, and REST API v2 fallback for Cloud and local environments. It also wires Codex to the local Inngest dev server MCP endpoint when available.",
+    "shortDescription": "Audit codebases and build durable workflows, agents, and Agent Evals with Inngest.",
+    "longDescription": "Inngest teaches Codex how to audit an existing TypeScript/JavaScript codebase for durability gaps, add, debug, migrate, and evolve durable functions, event schemas, step-based workflows, durable agent flows, Agent Evals with scoring/sessions/experiments, flow-control policies, middleware, realtime UI updates, CLI/dev-server workflows, API CLI operations, and REST API v2 fallback for Cloud and local environments. It also wires Codex to the local Inngest dev server MCP endpoint when available.",
     "developerName": "Inngest",
     "category": "Developer Tools",
     "capabilities": [
@@ -36,7 +37,8 @@
     "defaultPrompt": [
       "Audit this codebase for Inngest opportunities.",
       "Add a durable Inngest workflow.",
-      "Create a durable AI agent workflow."
+      "Create a durable AI agent workflow.",
+      "Add Agent Evals with scoring and sessions."
     ],
     "brandColor": "#111827",
     "composerIcon": "./assets/inngest-mark.svg",

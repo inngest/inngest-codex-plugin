@@ -572,3 +572,52 @@ prompts:
         No v3 realtime middleware in a v4 project. No raw string function IDs
         in step.invoke. No hardcoded local dev mode in production source. No
         schema type erasure unless the original app had no types to preserve.
+
+  - id: "15"
+    slug: production-agent-evals
+    fixture: fixtures/agent-support-app
+    prompt: |
+      We need to evaluate the support agent based on real outcomes, not just
+      whether the model returned text. Please update it so we can group all
+      runs for the same ticket, score guardrail/tool quality during the run,
+      wait for a later helpful/not-helpful signal, and compare two answer
+      styles against that feedback.
+    targets:
+      primitives:
+        - meta.sessions
+        - scoreMiddleware
+        - step.score or inngest.score
+        - createScorer
+        - defer
+        - group.experiment
+        - experimentRef attribution
+      naive_traps:
+        - offline eval script disconnected from production runs
+        - random if/else A/B split with no durable assignment
+        - score rows only in the app DB with no run attribution
+        - feedback polling loop or cron job
+        - unstable score names or non-idempotent score writes
+    rubric:
+      durability: |
+        Outcome collection survives deploys and crashes. Later user feedback
+        can be waited on durably without keeping an HTTP request, process,
+        cron poller, or in-memory state alive.
+      correctness: |
+        Candidate groups related runs by ticket or conversation, records
+        direct scores for known quality signals, defers scoring for later
+        helpful/not-helpful feedback, and compares answer variants with a
+        production experiment.
+      idempotency: |
+        Score writes use stable names and durable/memoized IDs. Replays do
+        not duplicate scores, duplicate feedback attribution, or switch the
+        selected experiment variant mid-run.
+      reached_for_inngest: |
+        Candidate uses Agent Evals primitives: `meta.sessions`,
+        `scoreMiddleware`, `step.score` or `inngest.score`, `createScorer`,
+        `defer`, `group.experiment`, and `experimentRef` so scores are
+        attributed to the run and variant that produced the answer.
+      avoided_antipattern: |
+        No offline-only eval harness as the primary solution. No random
+        in-process A/B split. No separate eval platform with manual run ID
+        stitching. No cron/polling loop for feedback. No score-only app table
+        that cannot be traced back to execution.

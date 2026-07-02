@@ -11,11 +11,12 @@ The official Inngest plugin for Codex. One install, and Codex knows how
 to audit an existing codebase for durability gaps, build reliable durable
 functions, design event-driven workflows, configure flow control, add
 middleware, stream realtime updates, create durable agent workflows, operate
-[Inngest](https://www.inngest.com) through the CLI and Dev Server, inspect
-Cloud/local runs with `inngest api`, fall back to REST API v2 when needed, and
-migrate Inngest SDK projects.
+[Inngest](https://www.inngest.com) through the CLI and Dev Server, add Agent
+Evals with scoring/sessions/experiments, inspect Cloud/local runs with
+`inngest api`, fall back to REST API v2 when needed, and migrate Inngest SDK
+projects.
 
-> **Beta:** v0.3.3 is the current Codex port of the Inngest Claude Code
+> **Beta:** v0.3.4 is the current Codex port of the Inngest Claude Code
 > plugin. Feedback is welcome via GitHub issues, the
 > [Inngest Discord](https://www.inngest.com/discord), or
 > [@inngest](https://twitter.com/inngest).
@@ -96,7 +97,8 @@ After installation, when operating inside a user's app repo:
 If the user asks for "background jobs", "make this reliable", "fix dropped
 webhooks", "stop endpoint timeouts", "make this agent durable", or "migrate
 Inngest v3 to v4", load the relevant skill from this plugin before designing
-the change.
+the change. If they ask to score agents, compare prompts or models, add
+production evals, or connect user outcomes to runs, load `inngest-agent-evals`.
 
 ## Fast path
 
@@ -130,10 +132,10 @@ with the Inngest serve endpoint.
 
 ## What's included
 
-- **13 Codex skills** covering brownfield audits, setup, events, durable
-  functions, steps, durable agents, flow control, middleware, realtime,
-  v3-to-v4 migrations, CLI/dev-server workflows, API CLI operations, and REST
-  API v2 fallback.
+- **14 Codex skills** covering brownfield audits, setup, events, durable
+  functions, steps, durable agents, Agent Evals, flow control, middleware,
+  realtime, v3-to-v4 migrations, CLI/dev-server workflows, API CLI operations,
+  and REST API v2 fallback.
 - **Codex plugin manifest** at `plugins/inngest/.codex-plugin/plugin.json`.
 - **Local marketplace entry** at `.agents/plugins/marketplace.json`.
 - **MCP server config** for the local Inngest dev server at
@@ -176,6 +178,12 @@ avoid repeating successful model or tool calls on retry.
 ```
 
 ```text
+Add Agent Evals to this support agent. Group runs by ticket, score guardrail
+checks during the run, defer user-feedback scoring, and compare two answer
+styles with a step experiment.
+```
+
+```text
 This repo uses Inngest SDK v3 patterns but now has inngest@latest installed.
 Migrate it cleanly to v4, including serve options, triggers, typed events,
 step.invoke, realtime, and local dev mode.
@@ -190,6 +198,7 @@ step.invoke, realtime, and local dev mode.
 | [`inngest-durable-functions`](./plugins/inngest/skills/inngest-durable-functions/) | Function config, triggers, step execution, retries, cancellation, observability |
 | [`inngest-steps`](./plugins/inngest/skills/inngest-steps/) | `step.run`, `step.sleep`, `step.waitForEvent`, `step.invoke`, `step.ai`, parallel work |
 | [`inngest-agents`](./plugins/inngest/skills/inngest-agents/) | Durable AI agents with AgentKit, `step.ai`, tools, approval waits, realtime progress, and flow control |
+| [`inngest-agent-evals`](./plugins/inngest/skills/inngest-agent-evals/) | Agent Evals with scoring, deferred scorers, sessions, traces, step experiments, Insights, and outcome-based evaluation |
 | [`inngest-events`](./plugins/inngest/skills/inngest-events/) | Event schemas, IDs for idempotency, fan-out patterns, system events |
 | [`inngest-flow-control`](./plugins/inngest/skills/inngest-flow-control/) | Concurrency, throttling, rate limits, debounce, priority, singleton, batching |
 | [`inngest-middleware`](./plugins/inngest/skills/inngest-middleware/) | Lifecycle hooks, dependency injection, Sentry, encryption, custom middleware |

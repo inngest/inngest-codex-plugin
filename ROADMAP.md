@@ -4,12 +4,12 @@ This repo is the Codex port of the Inngest Claude Code plugin. It keeps
 the same Inngest skill inventory while replacing Claude-specific
 marketplace metadata with Codex plugin and marketplace metadata.
 
-## Today (v0.3.3)
+## Today (v0.3.4)
 
 The current release covers the core TypeScript surface for durable systems
 with Inngest, CLI/dev-server workflows, API CLI operations, REST API v2
-fallback, durable agent patterns, and an agent-first brownfield audit workflow
-for existing repositories:
+fallback, durable agent patterns, Agent Evals, and an agent-first brownfield
+audit workflow for existing repositories:
 
 | Skill | What it covers |
 |---|---|
@@ -19,6 +19,7 @@ for existing repositories:
 | `inngest-durable-functions` | Triggers, memoization, retries, error handling |
 | `inngest-steps` | `step.run`, `step.sleep`, `step.waitForEvent`, `step.invoke`, `step.ai` |
 | `inngest-agents` | AgentKit, `step.ai`, tool calls, human review, realtime progress, provider flow control |
+| `inngest-agent-evals` | Scoring, deferred scorers, sessions, traces, step experiments, Insights, outcome-based eval loops |
 | `inngest-flow-control` | Concurrency, throttling, rate limits, debounce, batching |
 | `inngest-middleware` | Cross-cutting concerns, dependency injection |
 | `inngest-realtime` | v4 native realtime, channels, subscription tokens, UI consumers |
@@ -37,6 +38,8 @@ can inspect runs, events, and function state during local development.
 - Track the beta API CLI as endpoint coverage grows and update `inngest-api-cli`
   guardrails when commands stabilize.
 - Deepen durable AI agent examples with UI traces.
+- Add focused eval prompts for Agent Evals scoring, deferred scoring, sessions,
+  and step experiments.
 - Replace eval context-mode with true non-interactive Codex plugin install when
   the CLI exposes a stable session interface.
 - Add automated judge-model execution on top of the current blind judge packets.
@@ -62,3 +65,6 @@ Releases are tagged from this repository.
 - **v0.3.3** - adds `inngest-api-cli` as the prescriptive `inngest api`
   operations skill, keeping `inngest-cli` focused on dev server and general CLI
   workflows.
+- **v0.3.4** - adds `inngest-agent-evals` for Agent Evals with scoring,
+  deferred scorers, sessions, traces, step experiments, Insights, and
+  outcome-based evaluation loops.

@@ -81,7 +81,7 @@ Current fixtures:
 | Fixture | Used by | What it tests |
 |---------|---------|---------------|
 | `fixtures/brownfield-next-app` | `12` | Existing Next.js routes/jobs with webhook side effects, a long report endpoint, and a fragile cron sync |
-| `fixtures/agent-support-app` | `13` | In-memory AI support agent loop with expensive model/tool calls and polling approval wait |
+| `fixtures/agent-support-app` | `13`, `15` | In-memory AI support agent loop with expensive model/tool calls, polling approval wait, and missing outcome-eval instrumentation |
 | `fixtures/inngest-v3-app` | `14` | Mixed v3/v4 Inngest app with old trigger syntax, `EventSchemas`, v3 realtime middleware, serve options, and string `step.invoke` |
 
 The current runner's plugin-on side uses a portable plugin-context prompt built
