@@ -19,6 +19,8 @@ Use the plugin when you want Codex to:
   and long-running request handlers into durable functions.
 - Build durable AI agent workflows with AgentKit, tool calls, human approval,
   realtime progress, and provider flow control.
+- Add Agent Evals with scoring, deferred scorers, sessions, traces,
+  experiments, and Insights so agent outcomes can be measured in production.
 - Migrate an existing Inngest TypeScript SDK v3 project to v4.
 - Inspect local runs and events through the Inngest Dev Server MCP endpoint.
 
@@ -34,8 +36,9 @@ The plugin includes three pieces:
 
 - **Codex skills**: Structured instructions that Codex can load when a task
   matches Inngest setup, events, durable functions, steps, flow control,
-  middleware, realtime, durable agents, brownfield audits, v3-to-v4 migration,
-  CLI/dev-server workflows, API CLI operations, or REST API v2 fallback.
+  middleware, realtime, durable agents, Agent Evals, brownfield audits,
+  v3-to-v4 migration, CLI/dev-server workflows, API CLI operations, or REST API
+  v2 fallback.
 - **Copyable examples**: Small TypeScript patterns for a Next.js durable
   workflow and a durable AgentKit workflow. These examples are meant for agents
   to adapt to your repository, not paste blindly.
@@ -166,6 +169,7 @@ The plugin currently includes these skills:
 | `inngest-durable-functions` | Create functions with triggers, retries, step boundaries, cancellation, error handling, and observability. |
 | `inngest-steps` | Use `step.run`, `step.sleep`, `step.waitForEvent`, `step.waitForSignal`, `step.sendEvent`, `step.invoke`, and `step.ai`. |
 | `inngest-agents` | Build durable AI agents with AgentKit, tool calls, approval waits, realtime progress, and flow control. |
+| `inngest-agent-evals` | Add Agent Evals with scoring, deferred scorers, sessions, traces, step experiments, Insights, and outcome-based evaluation. |
 | `inngest-flow-control` | Configure concurrency, throttling, rate limits, debounce, priority, singleton, and batching. |
 | `inngest-middleware` | Add cross-cutting behavior such as dependency injection, logging, Sentry, and encryption. |
 | `inngest-realtime` | Use v4 native realtime channels, publish progress, mint subscription tokens, and consume updates in UIs. |
@@ -220,6 +224,7 @@ The plugin is especially useful for tasks like:
 - "This delayed email uses `setTimeout`."
 - "This AI workflow waits for a human and currently polls a database."
 - "This agent repeats expensive tool calls when it retries."
+- "We need to score this agent on user feedback and compare two prompt variants."
 - "This v3 project broke after upgrading to v4."
 
 It is less useful for a single short, read-only model call or a synchronous
@@ -309,4 +314,7 @@ and eval harness live in the Codex plugin repository.
 - [Serving Inngest functions](/docs/learn/serving-inngest-functions)
 - [How functions are executed](/docs/learn/how-functions-are-executed)
 - [AI inference with `step.ai`](/docs/features/inngest-functions/steps-workflows/step-ai-orchestration)
+- [Agent Evals](/docs/learn/agent-evals)
+- [Scoring](/docs/features/inngest-functions/steps-workflows/scoring)
+- [Step experiments](/docs/features/inngest-functions/steps-workflows/step-experiments)
 - [TypeScript SDK v3 to v4 migration](/docs/reference/typescript/v4/migrations/v3-to-v4)
