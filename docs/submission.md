@@ -101,49 +101,19 @@ access-token expiry, reconnect, and denied write scope. Confirm that the host
 shows the intended consent for writes. Inspect an uncertain write's result
 before retrying it.
 
-## Release gates
+## Submission checklist
 
 - [ ] Run the cases above in clean client sessions with the final package.
-- [ ] Review every live tool's title, schema, and safety annotations. The shared
-  server currently derives read-only/destructive flags from HTTP method and
-  marks open-world false for every tool. Audit POST-based reads such as Insights
-  and operations that can trigger external effects; correct metadata at the
-  server source before submitting. Skills cannot override tool annotations.
-- [ ] Complete the OpenAI identity support below. Public discovery currently
-  advertises neither `openid` nor `email` and has no UserInfo endpoint.
-- [ ] Update the public MCP setup docs to explain OAuth; the current website
-  source still leads with API-key setup.
+- [ ] Run the portal validation and live tool scan; address reported issues.
 - [ ] Verify support/policy URLs and confirm the policy covers tool inputs,
   outputs, execution history, user identity, and the applicable retention.
 - [ ] Create reviewer credentials, capture real demo screenshots if requested,
   choose supported regions, and assign a submission owner.
 - [ ] For OpenAI, provide a demo-recording URL showing the main use cases and
   tools across supported platforms.
-- [ ] Check all bundled coding skills against provider scans. Existing terminal
-  workflows include `npx ...@latest` and environment-based credentials; they
-  need review against Claude's launcher and credential rules. Core Cloud use
-  must not depend on those terminal workflows.
 - [ ] Land `inngest-cloud` and routing updates in `inngest-skills` first, then
   update both plugin repos. The local copies are identical; a sync from old
   upstream would otherwise remove them.
-
-## OpenAI auth work before submission
-
-OpenAI's submission guidance asks for OIDC discovery, enabled `openid` and
-`email` scopes, and an authenticated UserInfo endpoint returning the user's
-verified email for workspace domain restrictions. The shipped MCP OAuth flow
-alone does not satisfy that identity requirement.
-
-Implement this in the Cloud OAuth service with scope, audience, expiry,
-revocation, and user identity tests. `email_verified` must reflect verified
-identity data; never hardcode it to true for an unverified address. Keep identity
-scopes separate from Inngest resource permissions. Do not merely advertise
-unimplemented scopes. Confirm the required response and discovery contract
-with the OpenAI portal before release.
-
-Domain verification is separate: serve the portal's exact token at
-`/.well-known/openai-apps-challenge` on `api.inngest.com` or an allowed parent
-host when the portal provides it. Do not invent a challenge token.
 
 ## Data handling notes for the submitter
 
@@ -167,10 +137,10 @@ one public plugin for ChatGPT and Codex. A local marketplace install does not
 publish it or register a hosted ChatGPT connection.
 
 The submitter needs **Apps Management: Write** in the owning OpenAI
-organization and a verified developer/business identity. Finish the auth and
-domain-verification gates, scan the live tools, upload the skills, then enter
-listing copy, prompts, tests, and availability. Submit only after the scan and
-client tests pass.
+organization and a verified developer/business identity. Start a draft with the
+current production endpoint, scan the live tools, upload the skills, and enter
+listing copy, prompts, tests, and availability. Complete any portal verification
+steps and address validation findings before submitting for review.
 
 For ChatGPT testing before publication, register the endpoint in developer
 mode and use OAuth. If a local development package needs a registered app
@@ -196,3 +166,31 @@ References:
 - [MCP plugin submission](https://developers.openai.com/plugins/deploy/submission)
 - [OAuth and workspace domain restrictions](https://developers.openai.com/plugins/build/auth)
 - [Adapting Claude plugins](https://developers.openai.com/plugins/guides/submit-claude-plugin)
+
+## Possible follow-up from submission review
+
+Start with the tested plugin and the current production MCP endpoint. Run the
+portal checks and address specific validation or reviewer feedback. The items
+below may need follow-up; they do not require merging the larger Cloud/OIDC
+changes before starting submission.
+
+- **Tool metadata:** Review the live tool scan for accurate read-only,
+  destructive, and open-world annotations. The current server derives some
+  flags from HTTP methods, so POST-based reads and operations with external
+  effects may need targeted fixes. Skills cannot override server annotations.
+- **OpenAI identity support:** The documentation describes OIDC discovery,
+  `openid` and `email` scopes, and UserInfo for workspace domain restrictions.
+  The current endpoint does not provide them. Confirm what the portal or
+  reviewer requires for this listing before expanding the OAuth service.
+  Signed ID tokens are not established as a submission prerequisite.
+- **Domain verification:** When the portal provides a challenge, serve its exact
+  token at `/.well-known/openai-apps-challenge` on `api.inngest.com` or an allowed
+  parent host. This may be handled outside the Cloud OAuth service.
+- **Public setup docs and skill scans:** OAuth setup documentation and bundled
+  coding skills may need updates based on review. Core Cloud workflows should
+  work without a terminal; review optional terminal workflows separately.
+
+If identity support is needed, keep identity scopes separate from resource
+permissions and test consent, audience, expiry, refresh, and revocation.
+Return the actual email-verification status; do not advertise unimplemented
+scopes or treat the existing client tests as proof of identity support.
