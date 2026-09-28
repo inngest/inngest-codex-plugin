@@ -7,7 +7,7 @@ description: Install and use the Inngest Codex plugin so Codex can audit codebas
 
 The Inngest Codex plugin teaches Codex how to build with Inngest from inside
 your codebase. It gives the agent a set of task-specific skills, copyable
-examples, and local Dev Server MCP configuration so it can inspect your
+examples, and Cloud OAuth MCP configuration so it can inspect your
 application, make focused code changes, and verify Inngest functions locally.
 
 Use the plugin when you want Codex to:
@@ -42,9 +42,9 @@ The plugin includes three pieces:
 - **Copyable examples**: Small TypeScript patterns for a Next.js durable
   workflow and a durable AgentKit workflow. These examples are meant for agents
   to adapt to your repository, not paste blindly.
-- **Dev Server MCP config**: A local MCP server entry pointing to the Inngest
-  Dev Server at `http://127.0.0.1:8288/mcp`, allowing Codex to inspect local
-  functions, events, and runs when the dev server is running.
+- **Cloud MCP config**: An OAuth connection to `https://api.inngest.com/mcp`
+  for deployed apps, functions, runs, events, and traces. Local Dev Server MCP
+  is an optional separate connection.
 
 The goal is to make Codex work from repository evidence. For brownfield tasks,
 the plugin instructs Codex to inspect your framework, package manager, existing
@@ -59,10 +59,11 @@ Clone the plugin repository:
 git clone https://github.com/inngest/inngest-codex-plugin.git
 ```
 
-Then install the plugin bundle in Codex:
+Register the marketplace from a terminal, then install Inngest from that
+marketplace in the Codex app and complete OAuth sign-in:
 
 ```text
-/plugin install /absolute/path/to/inngest-codex-plugin/plugins/inngest
+codex plugin marketplace add /absolute/path/to/inngest-codex-plugin
 ```
 
 After installation, open the project you want to edit in Codex and ask for an
@@ -84,14 +85,14 @@ In another terminal:
 npx inngest-cli@latest dev
 ```
 
-The plugin's MCP config expects the Dev Server MCP endpoint at:
+Add the optional local MCP connection separately:
 
-```text
-http://127.0.0.1:8288/mcp
+```bash
+codex mcp add inngest-dev --url http://127.0.0.1:8288/mcp
 ```
 
-If the Dev Server starts on another port, update the plugin's `.mcp.json` or
-your Codex MCP configuration to match the actual port.
+Use the actual Dev Server port if it differs from 8288. Cloud MCP stays at
+`https://api.inngest.com/mcp`; hosted chat cannot reach the local Dev Server.
 
 ## First prompts to try
 
@@ -163,6 +164,7 @@ The plugin currently includes these skills:
 
 | Skill | What it helps Codex do |
 | --- | --- |
+| `inngest-cloud` | Inspect and operate Cloud resources through OAuth MCP. |
 | `inngest-brownfield-audit` | Inspect an existing repo, find durability gaps, rank candidates, and choose the safest first integration. |
 | `inngest-setup` | Install the SDK, create a client, add serve endpoints, configure local development, and connect workers. |
 | `inngest-events` | Design event names, event payloads, idempotency keys, fan-out patterns, and system-event handlers. |
@@ -190,28 +192,27 @@ The plugin ships examples under `plugins/inngest/examples`:
 When using an example, ask Codex to adapt the file boundaries, import style,
 event names, service calls, and tests to your repo.
 
-## Dev Server MCP
+## Cloud MCP
 
-The plugin includes this MCP configuration:
+The plugin bundles the Cloud connection:
 
 ```json
 {
   "mcpServers": {
-    "inngest-dev": {
+    "inngest-cloud": {
       "type": "http",
-      "url": "http://127.0.0.1:8288/mcp"
+      "url": "https://api.inngest.com/mcp"
     }
   }
 }
 ```
 
-When the Inngest Dev Server is running, this lets Codex inspect local Inngest
-state while it works. Use it to verify that functions are registered, events are
-sent with the expected payloads, runs are created, and failures show up at the
-right step boundary.
+Sign in through OAuth in the host. Use `inngest-cloud` to inspect deployed
+runs, traces, apps, functions, events, and Insights. Specify the intended
+environment. Cloud operations work without a local Dev Server.
 
-The MCP connection complements tests. It does not replace typechecks, unit
-tests, integration tests, or reviewing the generated code.
+Add local Dev Server MCP separately for local development, using the command
+above. It complements typechecks and tests; it does not replace them.
 
 ## Good tasks for the plugin
 
@@ -276,18 +277,13 @@ Inngest function with one step.run per side effect.
 
 ### Codex needs to operate on Cloud resources
 
-The plugin includes `inngest-cli` for general CLI/dev-server workflows,
-`inngest-api-cli` for beta `inngest api` operations, and `inngest-api` for REST
-API v2 fallback. Cloud operations need explicit target and authentication
-context. Provide credentials through environment variables, not pasted into
-prompts or committed files.
+Use connected `inngest-cloud` MCP tools first. If authentication expires,
+reconnect through OAuth in the host. Resolve the intended account and environment.
 
-Codex should load `inngest-api-cli`, start with
-`npx inngest-cli@latest api --help`, command-specific help, and the
-agent-friendly API docs at `https://api-docs.inngest.com/llms.txt` before
-asking for details the API can reveal. Prefer read-only checks first, then
-confirm target account, environment, and intent before mutating environments,
-webhooks, app syncs, function invocations, or broad Insights queries.
+For explicit terminal work or an operation absent from MCP, use `inngest-api-cli`
+and its command help. Use `inngest-api` for raw HTTP or operations absent from
+both MCP and the CLI. Provide CLI credentials through environment variables,
+not prompts or committed files. Do not request an API key for connected MCP work.
 
 ## Updating the plugin
 

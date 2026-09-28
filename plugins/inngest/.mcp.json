@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "inngest-dev": {
+    "inngest-cloud": {
       "type": "http",
-      "url": "http://127.0.0.1:8288/mcp"
+      "url": "https://api.inngest.com/mcp"
     }
   }
 }

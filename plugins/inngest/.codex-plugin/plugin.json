@@ -1,7 +1,7 @@
 {
   "name": "inngest",
-  "version": "0.3.4+codex.20260702000000",
-  "description": "Official Inngest plugin for Codex: skills and MCP wiring for brownfield audits, durable functions, durable agents, Agent Evals, event-driven workflows, flow control, middleware, realtime updates, v3-to-v4 migrations, CLI/dev-server workflows, API CLI operations, and REST API v2 fallback.",
+  "version": "0.4.0",
+  "description": "Build durable workflows and inspect Inngest Cloud apps, functions, events, runs, and traces through OAuth MCP.",
   "author": {
     "name": "Inngest, Inc.",
     "email": "hello@inngest.com",
@@ -23,8 +23,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Inngest",
-    "shortDescription": "Audit codebases and build durable workflows, agents, and Agent Evals with Inngest.",
-    "longDescription": "Inngest teaches Codex how to audit an existing TypeScript/JavaScript codebase for durability gaps, add, debug, migrate, and evolve durable functions, event schemas, step-based workflows, durable agent flows, Agent Evals with scoring/sessions/experiments, flow-control policies, middleware, realtime UI updates, CLI/dev-server workflows, API CLI operations, and REST API v2 fallback for Cloud and local environments. It also wires Codex to the local Inngest dev server MCP endpoint when available.",
+    "shortDescription": "Build durable workflows and debug Inngest Cloud runs.",
+    "longDescription": "Connect your Inngest account to inspect deployed apps, functions, events, runs, traces, and Insights through OAuth MCP. Diagnose failures and carry out requested workflow operations in the selected environment. Coding hosts can also use the bundled skills to build durable functions and agents, audit codebases, and test locally with an optional Dev Server connection.",
     "developerName": "Inngest",
     "category": "Developer Tools",
     "capabilities": [
@@ -35,13 +35,13 @@
     "privacyPolicyURL": "https://www.inngest.com/privacy",
     "termsOfServiceURL": "https://www.inngest.com/terms",
     "defaultPrompt": [
-      "Audit this codebase for Inngest opportunities.",
-      "Add a durable Inngest workflow.",
-      "Create a durable AI agent workflow.",
-      "Add Agent Evals with scoring and sessions."
+      "Find recent failed runs and explain the failed steps.",
+      "Show the apps and functions in my staging environment.",
+      "Audit this codebase for Inngest opportunities."
     ],
     "brandColor": "#111827",
     "composerIcon": "./assets/inngest-mark.svg",
-    "logo": "./assets/inngest-wordmark.png"
+    "logo": "./assets/inngest-wordmark.png",
+    "logoDark": "./assets/inngest-wordmark-light.png"
   }
 }
