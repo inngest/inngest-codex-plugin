@@ -277,18 +277,13 @@ Inngest function with one step.run per side effect.
 
 ### Codex needs to operate on Cloud resources
 
-The plugin includes `inngest-cli` for general CLI/dev-server workflows,
-`inngest-api-cli` for beta `inngest api` operations, and `inngest-api` for REST
-API v2 fallback. Cloud operations need explicit target and authentication
-context. Provide credentials through environment variables, not pasted into
-prompts or committed files.
+Use connected `inngest-cloud` MCP tools first. If authentication expires,
+reconnect through OAuth in the host. Resolve the intended account and environment.
 
-Codex should load `inngest-api-cli`, start with
-`npx inngest-cli@latest api --help`, command-specific help, and the
-agent-friendly API docs at `https://api-docs.inngest.com/llms.txt` before
-asking for details the API can reveal. Prefer read-only checks first, then
-confirm target account, environment, and intent before mutating environments,
-webhooks, app syncs, function invocations, or broad Insights queries.
+For explicit terminal work or an operation absent from MCP, use `inngest-api-cli`
+and its command help. Use `inngest-api` for raw HTTP or operations absent from
+both MCP and the CLI. Provide CLI credentials through environment variables,
+not prompts or committed files. Do not request an API key for connected MCP work.
 
 ## Updating the plugin
 

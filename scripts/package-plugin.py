@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import subprocess
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
@@ -25,17 +26,24 @@ def main():
         ".codex-plugin", ".mcp.json", "skills", "references",
         "examples", "assets", "README.md", "LICENSE",
     ]
+    tracked = subprocess.run(
+        ["git", "ls-files", "-z", "--cached", "--", *components],
+        cwd=plugin, check=True, capture_output=True,
+    ).stdout.decode().split("\0")
     files = []
-    for name in components:
-        component = plugin / name
-        if component.is_symlink():
-            raise ValueError(f"Symlinks cannot be packaged: {component}")
-        paths = sorted(component.rglob("*")) if component.is_dir() else [component]
-        for path in paths:
-            if path.is_symlink():
-                raise ValueError(f"Symlinks cannot be packaged: {path}")
-            if path.is_file():
-                files.append(path)
+    for name in filter(None, tracked):
+        path = plugin / name
+        relative = path.relative_to(plugin)
+        if any((plugin / parent).is_symlink() for parent in [relative, *relative.parents]):
+            raise ValueError(f"Symlinks cannot be packaged: {path}")
+        if not path.is_file():
+            raise ValueError(f"Tracked file is missing or not regular: {path}")
+        files.append(path)
+    packaged = {path.relative_to(plugin).as_posix() for path in files}
+    if not set(required).issubset(packaged):
+        raise ValueError("Required plugin files must be tracked by Git")
+    if not any(name.startswith("skills/") and name.endswith("/SKILL.md") for name in packaged):
+        raise ValueError("Skills must be tracked by Git")
 
     output = repository / "dist" / f"inngest-{version}.zip"
     output.parent.mkdir(exist_ok=True)

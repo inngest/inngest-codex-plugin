@@ -270,6 +270,9 @@ It is written to fit beside the existing Inngest AI dev tools docs.
 Most skills, including `inngest-cli`, `inngest-api-cli`, and `inngest-api`,
 are mirrored from
 [`inngest/inngest-skills`](https://github.com/inngest/inngest-skills).
+Merge [the Cloud skills update](https://github.com/inngest/inngest-skills/pull/15)
+before syncing from `main`. Older upstream revisions lack the Cloud skill and
+local MCP guidance and would remove them.
 Run `scripts/sync-skills.sh` whenever upstream skills change. The
 `inngest-brownfield-audit`, `inngest-agents`, and `inngest-v3-v4-migration`
 skills are maintained in this repository while the Codex-specific agent
