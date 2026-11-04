@@ -13,8 +13,8 @@ durable workflows and agents, Agent Evals, codebase audits, flow control,
 realtime, CLI operations, and SDK migrations. Cloud operations work in chat;
 repository edits and local commands require a coding host.
 
-> **Development:** v0.4.0 adds Cloud OAuth MCP to the existing coding plugin.
-> Public directory submission is pending. Feedback is welcome via GitHub issues, the
+> Available in the [plugin directory](https://chatgpt.com/plugins/plugin_asdk_app_6abe99ad4764819183b795f0d74e5216) for ChatGPT and Codex.
+> Feedback is welcome via GitHub issues, the
 > [Inngest Discord](https://www.inngest.com/discord), or
 > [@inngest](https://twitter.com/inngest).
 

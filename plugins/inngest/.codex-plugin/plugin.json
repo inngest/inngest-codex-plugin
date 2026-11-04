@@ -1,6 +1,6 @@
 {
   "name": "inngest",
-  "version": "0.4.0",
+  "version": "0.4.2",
   "description": "Build durable workflows and inspect Inngest Cloud apps, functions, events, runs, and traces through OAuth MCP.",
   "author": {
     "name": "Inngest, Inc.",
@@ -23,7 +23,7 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Inngest",
-    "shortDescription": "Build durable workflows and debug Inngest Cloud runs.",
+    "shortDescription": "Debug Inngest Cloud workflows.",
     "longDescription": "Connect your Inngest account to inspect deployed apps, functions, events, runs, traces, and Insights through OAuth MCP. Diagnose failures and carry out requested workflow operations in the selected environment. Coding hosts can also use the bundled skills to build durable functions and agents, audit codebases, and test locally with an optional Dev Server connection.",
     "developerName": "Inngest",
     "category": "Developer Tools",
@@ -41,7 +41,9 @@
     ],
     "brandColor": "#111827",
     "composerIcon": "./assets/inngest-mark.svg",
-    "logo": "./assets/inngest-wordmark.png",
-    "logoDark": "./assets/inngest-wordmark-light.png"
+    "logo": "./assets/inngest-mark.svg",
+    "logoDark": "./assets/inngest-mark-light.svg",
+    "supportURL": "https://github.com/inngest/inngest-codex-plugin/issues",
+    "composerIconDark": "./assets/inngest-mark-light.svg"
   }
 }
