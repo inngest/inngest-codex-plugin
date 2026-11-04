@@ -131,16 +131,24 @@ establish retention periods or act as a legal policy.
 
 ## OpenAI submission
 
-Use [Create plugin → With MCP](https://platform.openai.com/plugins) and submit
-the production endpoint, with the skills archive in the same draft. This is
-one public plugin for ChatGPT and Codex. A local marketplace install does not
-publish it or register a hosted ChatGPT connection.
+Use [Upload new or existing plugin](https://platform.openai.com/plugins).
+Upload the complete ZIP, including the Cloud MCP configuration, to create a
+public plugin for ChatGPT and Codex. The existing Codex manifest format remains
+supported; the portable Agent Plugins format is optional.
 
 The submitter needs **Apps Management: Write** in the owning OpenAI
-organization and a verified developer/business identity. Start a draft with the
-current production endpoint, scan the live tools, upload the skills, and enter
-listing copy, prompts, tests, and availability. Complete any portal verification
-steps and address validation findings before submitting for review.
+organization and a verified developer/business identity. Review **Metadata &
+Skills**, then connect the production server under **MCPs**, complete domain
+verification and OAuth, and scan the live tools. The portal currently connects
+one MCP server per plugin; local Dev Server MCP stays an optional separate
+connection.
+
+Listing metadata is read from the ZIP. Correct metadata or skills in the repo
+and upload a new ZIP; rescan hosted tool changes separately. In **Review
+details**, provide reviewer access, five positive and three negative test cases,
+the demo-recording URL, and release notes. Existing review information is
+preserved when omitted from the ZIP. Keep reviewer credentials out of the
+package. Submit after resolving required checks; publish after approval.
 
 For ChatGPT testing before publication, register the endpoint in developer
 mode and use OAuth. If a local development package needs a registered app
@@ -157,8 +165,8 @@ The archive contains the installable `plugins/inngest` bundle and excludes the
 repo's eval harness, Git metadata, and submission notes. Only Git-tracked files
 are packaged; stage new bundle files before building. Ignored and untracked
 local files are excluded. Use the same skills
-for local validation and portal upload. Keep the Cloud URL as the portal's
-server field even when the archive includes `.mcp.json`.
+for local validation and portal upload. The archive declares the Cloud endpoint
+in `.mcp.json`; verify that the portal connects that endpoint.
 
 References:
 

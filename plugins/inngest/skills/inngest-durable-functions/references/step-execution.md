@@ -15,7 +15,7 @@ Deep dive into how Inngest executes steps, handles memoization, and manages stat
 
 ### Each Step = HTTP Request
 
-**Tip**: See [references/checkpointing.md](references/checkpointing.md) to handle multiple steps on a single HTTP request, optimizing performance for low latency.
+**Tip**: See [references/checkpointing.md](checkpointing.md) to handle multiple steps on a single HTTP request, optimizing performance for low latency.
 
 ```typescript
 const importContacts = inngest.createFunction(
