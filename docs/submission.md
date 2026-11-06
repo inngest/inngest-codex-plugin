@@ -60,7 +60,7 @@ do not submit fabricated screenshots or customer data.
 Use discovered scopes and the user's consent choices. There is no DCR endpoint;
 choose CIMD, not dynamic registration. The server advertises CIMD, public token
 exchange, S256, resource indicators, and issuer identification. Do not put a
-static client ID, bearer token, or secret into `.mcp.json`.
+static client ID, bearer token, or secret into `mcp.json`.
 
 ## Reviewer fixture and test cases
 
@@ -133,8 +133,9 @@ establish retention periods or act as a legal policy.
 
 Use [Upload new or existing plugin](https://platform.openai.com/plugins).
 Upload the complete ZIP, including the Cloud MCP configuration, to create a
-public plugin for ChatGPT and Codex. The existing Codex manifest format remains
-supported; the portable Agent Plugins format is optional.
+public plugin for ChatGPT and Codex. The package uses the portable Agent Plugins
+format with root `plugin.json` and `mcp.json` files. OpenAI presentation settings
+live under `extensions.com.openai` in `plugin.json`.
 
 The submitter needs **Apps Management: Write** in the owning OpenAI
 organization and a verified developer/business identity. Review **Metadata &
@@ -166,7 +167,7 @@ repo's eval harness, Git metadata, and submission notes. Only Git-tracked files
 are packaged; stage new bundle files before building. Ignored and untracked
 local files are excluded. Use the same skills
 for local validation and portal upload. The archive declares the Cloud endpoint
-in `.mcp.json`; verify that the portal connects that endpoint.
+in `mcp.json`; verify that the portal connects that endpoint.
 
 References:
 
