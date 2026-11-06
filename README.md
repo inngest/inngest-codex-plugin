@@ -61,10 +61,10 @@ Register the local marketplace from a terminal:
 codex plugin marketplace add <clone-dir>
 
 Expected manifest:
-<clone-dir>/plugins/inngest/.codex-plugin/plugin.json
+<clone-dir>/plugins/inngest/plugin.json
 
 Expected Cloud MCP config:
-<clone-dir>/plugins/inngest/.mcp.json
+<clone-dir>/plugins/inngest/mcp.json
 
 Bundled Inngest Cloud MCP URL:
 https://api.inngest.com/mcp
@@ -132,7 +132,7 @@ with the Inngest serve endpoint.
   functions, steps, durable agents, Agent Evals, flow control, middleware,
   realtime, v3-to-v4 migrations, CLI/dev-server workflows, API CLI operations,
   and REST API v2 fallback.
-- **Codex plugin manifest** at `plugins/inngest/.codex-plugin/plugin.json`.
+- **Agent Plugins manifest** at `plugins/inngest/plugin.json`.
 - **Local marketplace entry** at `.agents/plugins/marketplace.json`.
 - **Cloud MCP connection** at `https://api.inngest.com/mcp` with OAuth sign-in.
 - **Shared Cloud operations skill** for runs, traces, events, and Insights.
@@ -143,11 +143,11 @@ with the Inngest serve endpoint.
 ```text
 .agents/plugins/marketplace.json    # Local Codex marketplace catalog
 plugins/inngest/                    # Installable Codex plugin bundle
-plugins/inngest/.codex-plugin/      # Codex plugin manifest
+plugins/inngest/plugin.json        # Agent Plugins manifest and OpenAI metadata
 plugins/inngest/skills/             # Inngest Codex skills
 plugins/inngest/assets/             # Plugin brand assets
 plugins/inngest/examples/           # Copyable TypeScript integration patterns
-plugins/inngest/.mcp.json           # Cloud OAuth MCP config
+plugins/inngest/mcp.json            # Cloud OAuth MCP config
 docs/                               # Website-ready documentation drafts
 eval/                               # Prompt catalog and judge harness
 scripts/sync-skills.sh              # Pull latest skills from inngest-skills
